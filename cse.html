@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ANPAV Dashboard</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(#011a2b, #033b46);
+      color: white;
+      transition: background 0.4s, color 0.4s;
+    padding-top: 20px;
+    }
+
+    header {
+    position: fixed; /* Fix the header at the top */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000; /* Ensure it stays above other elements */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #002634;
+    padding: 10px 20px;
+    border-bottom: 2px solid #00bcd4;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Optional shadow for better visibility */
+  }
+    .header-left { 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center;
+      margin-top: 0px;
+      margin-bottom: -25px;
+     }
+    .logo {
+       height: 40px;
+       }
+    .logo-text {
+       font-size: 20px;
+       margin-top: 0%;
+       color: rgb(255, 255, 255);
+      }
+    #greeting-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-style: normal;
+      font-size: 14px;
+      white-space: nowrap;
+      border-right: 2px solid white;
+      padding-right: 8px;
+    }
+
+    nav { position: relative;}
+    nav ul {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+      margin: 0;
+      padding: 10px;
+      border: 2px solid #00bcd4;
+      border-radius: 8px;
+      background: #002634;
+      width: fit-content;
+    }
+    nav li { position: relative; }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 5px 10px;
+      display: block;
+      transition: box-shadow 0.3s;
+    }
+    nav a:hover {
+      background: #00bcd4;
+      color: #000;
+      border-radius: 5px;
+      box-shadow: 0 0 10px #00bcd4, 0 0 20px #00bcd4;
+    }
+    .tooltip {
+      visibility: hidden;
+      opacity: 0;
+      background-color: rgba(0, 0, 0, 0.85);
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 6px 10px;
+      position: absolute; 
+      z-index: 1;
+      bottom: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      transition: opacity 0.3s ease, visibility 0.3s;
+      font-size: 14px;
+    }
+    nav li:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+    .hamburger {
+      display: none;
+      font-size: 28px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: white;
+      position: relative;
+      z-index: 1001;
+    }
+
+    .container {
+      padding: 60px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 30px;
+      color: #00bcd4;
+    }
+
+    .sem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .sem-card {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid #00bcd4;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      font-size: 20px;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 0 8px #00bcd4;
+    }
+
+    .sem-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px #00bcd4;
+      background-color: rgba(0, 188, 212, 0.2);
+    }
+
+    a {
+      text-decoration: none;
+      color: white;
+    }
+
+    header h2 {
+      color: #00bcd4;
+      font-size: 24px;
+      margin: 0;
+    }
+
+    @media screen and (min-width: 768px) {
+      .main-content {
+        flex-direction: row;
+        align-items: stretch;
+      }
+    }
+
+    @media screen and (max-width: 767px) {
+
+      nav ul {
+        flex-direction: column;
+        align-items: center;
+        position: absolute;
+        top: 60px;
+        margin-left: -100px;
+        width: fit-content;
+        display: none;
+        z-index: 1000;
+      }
+      
+      
+      nav ul.show { display: flex; }
+      .tooltip {
+      visibility: hidden;
+      opacity: 0;
+      background-color: rgba(0, 0, 0, 0.85);
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 6px 10px;
+      position: absolute; 
+      z-index: 1;
+      top: 60%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-left: -100%;
+      white-space: nowrap;
+      transition: opacity 0.3s ease, visibility 0.3s;
+      font-size: 14px;
+    }
+    nav li:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+      .hamburger { display: block; }
+    }
+
+    .info-panel {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    .update-panel h2 { margin-top: 0; }
+    .update-panel ul { list-style: none; padding: 0; }
+    .update-panel li { margin-bottom: 8px; }
+    .update-panel a {
+      color: #00bcd4;
+      text-decoration: none;
+      transition: text-shadow 0.3s ease;
+    }
+  </style>
+  <script type='text/javascript' src='//pl26464518.profitableratecpm.com/4e/20/09/4e20097b0f1279c4d21e6286250e247d.js'></script></head>
+
+<header>
+  <div class="header-left">
+    <img src="https://www.datanami.com/wp-content/uploads/2023/02/ChatGPT_shutterstock_CKA-scaled.jpg" alt="ANPAV Logo" class="logo">
+    <h1 class="logo-text">ANPAV</h1>
+  </div>
+  <div id="greeting-container"><span id="greeting-text"></span></div>
+  <nav>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+    <ul id="menuList"><li><a href="index.html">HOME</a><div class="tooltip">Navigate to home</div></li>
+      <li><a href="#">Course</a><div class="tooltip">View courses offered</div></li>
+      <li><a href="#">Result</a><div class="tooltip">Check your results</div></li>
+      <li><a href="#">Updates</a><div class="tooltip">Latest news & notices</div></li>
+    </ul>
+  </nav>
+</header>
+
+  <div class="container">
+    <h1>Select Your Academic sem</h1>
+    <div class="sem-grid">
+      <a href="#"><div class="sem-card">1st sem</div></a>
+      <a href="#"><div class="sem-card">2nd sem</div></a>
+      <a href="#"><div class="sem-card">3rd sem</div></a>
+      <a href="#"><div class="sem-card">4th sem</div></a>
+      <a href="#"><div class="sem-card">5st sem</div></a>
+      <a href="#"><div class="sem-card">6nd sem</div></a>
+      <a href="#"><div class="sem-card">7rd sem</div></a>
+      <a href="#"><div class="sem-card">8th sem</div></a>
+    </div>
+  </div>
+  <div class="info-panel">
+    <h1>Blog</h1>
+    <div class="update-panel"> <a href="#"><div class="sem-card">4th sem</div></a>
+    </div>
+  </div>
+  <script>
+    function toggleMenu() {
+      document.getElementById("menuList").classList.toggle("show");
+    }
+
+    function getTimeGreeting() {
+      const hour = new Date().getHours();
+      if (hour < 12) return "Good Morning";
+      else if (hour < 18) return "Good Afternoon";
+      else return "Good Evening";
+    }
+
+    function askNameAndStore() {
+      let name = prompt("Welcome! What is your good name?");
+      if (!name) name = "Guest";
+      localStorage.setItem("username", name);
+      localStorage.setItem("usernameTimestamp", Date.now().toString());
+      return name;
+    }
+
+    function typeGreeting(text, callback) {
+      const target = document.getElementById("greeting-text");
+      target.innerHTML = "";
+      let index = 0;
+
+      function typeEffect() {
+        if (index < text.length) {
+          target.innerHTML += text.charAt(index);
+          index++;
+          setTimeout(typeEffect, 80);
+        } else {
+          callback();
+        }
+      }
+      typeEffect();
+    }
+
+    window.onload = function () {
+      const storedName = localStorage.getItem("username");
+      const storedTime = localStorage.getItem("usernameTimestamp");
+      const now = Date.now();
+      const dayMs = 86400000;
+
+      let nameToUse;
+      if (storedName && storedTime && now - parseInt(storedTime) < dayMs) {
+        nameToUse = storedName;
+      } else {
+        nameToUse = askNameAndStore();
+      }
+
+      const greeting = `${getTimeGreeting()}, ${nameToUse}!`;
+      typeGreeting(greeting, () => {
+        document.getElementById("cardsContainer").classList.remove("loading");
+        document.querySelector(".main-content").style.opacity = 1;
+      });
+    };
+
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 40 },
+        "color": { "value": "#00bcd4" },
+        "shape": { "type": "circle" },
+        "opacity": { "value": 0.5 },
+        "size": { "value": 3 },
+        "line_linked": {
+          "enable": true,
+          "distance": 120,
+          "color": "#00bcd4",
+          "opacity": 0.4,
+          "width": 1
+        },
+        "move": { "enable": true, "speed": 1.2 }
+      },
+      "interactivity": {
+        "events": { "onhover": { "enable": true, "mode": "grab" } },
+        "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 0.5 } } }
+      }
+    });
+  </script>
+<script type='text/javascript' src='//pl26464518.profitableratecpm.com/4e/20/09/4e20097b0f1279c4d21e6286250e247d.js'></script></body>
+</html>
